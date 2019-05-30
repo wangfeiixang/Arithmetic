@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #name p {
+      color: skyblue;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <input type="text" id="input1" placeholder="num" /> -->
+  <h1 id="name">
+    <input type="text" id="input" placeholder="数量num" v-model="num" />
+    <p @click="fun">{{num}}</p>
+    {{msg}}
+  </h1>
+
+</body>
+<script>
+  function observe(data) {
+    Object.keys(data).map((key) => {
+      defineProperty(data, key, data[key])
+    })
+  }
+
+  function defineProperty(obj, key, val) {
+    let dep = new Dep()
+    Object.defineProperty(obj, key, {
+      enumerable: false,
+      configurable: true,
+      get() {
+        // console.log('defineProperty--get--val--', val)
+        if (Dep.target) {
+          dep.addSub(Dep.target)
+        }
+        return val
+      },
+      set(newVal) {
+        if (val === newVal) return
+        // console.log('defineProperty--set--val--', val, 'newVal--', newVal)
+        val = newVal
+        dep.notify()
+      }
+    })
+
+  }
+
+
+  function Dep() {
+    this.subs = []
+  }
+
+  Dep.prototype = {
+    addSub(item) {
+      this.subs.push(item)
+    },
+    notify() {
+      this.subs.forEach(sub => {
+        // console.log('notify--sub--', sub)
+        sub.update()
+      })
+    }
+  }
+
+
+  function Watcher(data, key, cb) {
+    Dep.target = this
+    this.data = data
+    this.key = key
+    this.value = data[key]
+    this.cb = cb
+    Dep.target = null
+  }
+
+  Watcher.prototype = {
+    // get() {
+    //   this.value = this.data[this.key]
+    //   // console.log('watcher--get--value--', this.value)
+    //   return this.value
+    // }
+    update() {
+      if (this.value !== this.data[this.key]) {
+        this.value = this.data[this.key]
+        this.cb(this.value)
+      }
+      // console.log('watcher--update--value--', this.value)
+    }
+  }
+
+  function Compile(el, vm) {
+    this.el = el
+    this.vm = vm
+    this.fragment = null
+    this.init()
+  }
+
+  Compile.prototype = {
+    init() {
+      this.fragment = this.nodeToFragment(this.el)
+      this.compileElement(this.fragment)
+      this.el.appendChild(this.fragment)
+      // console.log('init--el', this.el, 'fragment--', this.fragment)
+    },
+    nodeToFragment(el) {
+      let fragment = document.createDocumentFragment()
+      let child = el.firstChild
+      while (child) {
+        // 将Dom元素移入fragment中
+        fragment.appendChild(child);
+        child = el.firstChild
+      }
+      return fragment
+    },
+    compileElement(el) {
+      let _this = this
+      let childNodes = el.childNodes
+      let reg = /\{\{\s*(.*?)\s*\}\}/
+      childNodes.forEach((items) => {
+        if (items.nodeType === 3 && reg.test(items.nodeValue)) {
+          // console.log('00--nodeType')
+          let vars = reg.exec(items.textContent)[1]
+          items.textContent = _this.vm.data[vars]
+          new Watcher(_this.vm.data, vars, (val) => {
+            // console.log('00--nodeType--11')
+            items.textContent = val
+          })
+          // console.log('22--items--', items)
+        }
+
+        let attr = items.attributes
+        if (attr instanceof Object) {
+          Array.from(attr).forEach(attrItem => {
+            // console.log('attrItem--', attrItem, attrItem.name, attrItem.value)
+            if (attrItem.name === 'v-model') {
+              // console.log('11--items--', items)
+              items.addEventListener("input", (e) => {
+                _this.vm.data[attrItem.value] = e.target.value
+                // console.log('22--addEventListener--', e.target.value, ' attrItem.value--', attrItem.value)
+              })
+
+              new Watcher(_this.vm.data, attrItem.value, (val) => {
+                // console.log('33--Watcher--val--', val, 'items--', items)
+                items.value = val
+              })
+              // let vars = reg.exec(items.textContent)[1]
+            }
+
+          })
+
+        }
+
+        if (items.childNodes.length) {
+          _this.compileElement(items)
+        }
+      })
+      // console.log('compileElement--', childNodes)
+    }
+  }
+
+
+
+  function CloneVue(options) {
+    let _this = this
+    this.data = options.data
+    this.el = options.el
+    observe(this.data)
+
+    // new Watcher(this.data, 'msg', (val) => {
+    //   _this.el.innerText = val
+    // })
+
+    new Compile(this.el, this)
+
+    // document.querySelector('#input').addEventListener("input", (e) => {
+    //   _this.data.msg = e.target.value
+    // })
+
+    // document.querySelector('#input1').addEventListener("input", (e) => {
+    //   _this.data.num = e.target.value
+    // })
+  }
+
+  let ele = document.querySelector('#name')
+
+  new CloneVue({
+    el: ele,
+    data: {
+      msg: 'hello world',
+      num: 0
+    }
+  })
+</script>
+
+</html>
