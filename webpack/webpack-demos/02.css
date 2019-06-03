@@ -1,0 +1,6 @@
+@import './index.css';
+
+div {
+  color: gold;
+  transform: all 2s;
+}

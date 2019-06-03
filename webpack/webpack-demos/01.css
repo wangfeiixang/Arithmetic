@@ -1,0 +1,6 @@
+@import './index.css';
+
+h3 {
+  color: skyblue;
+  transform: scale(0.7);
+}
