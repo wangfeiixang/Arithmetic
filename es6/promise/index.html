@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+</body>
+<script>
+  // async await promise 执行顺序
+  // async function async1() {
+  //   console.log('async1 start')
+  //   let a = await async2()
+  //   console.log('a--', a)
+  //   console.log('async1 end')
+  // }
+  // async function async2() {
+  //   console.log('async2')
+  //   return 'async2--end'
+  // }
+  // console.log('script start')
+  // setTimeout(function () {
+  //   console.log('setTimeout')
+  // }, 0)
+  // async1();
+  // new Promise(function (resolve) {
+  //   console.log('promise1')
+  //   resolve();
+  // }).then(function () {
+  //   console.log('promise2')
+  //   return 'promise3'
+  // }).then(function (b) {
+  //   console.log(b)
+  //   // return 'promise2'
+  // })
+
+  // new Promise(function (resolve) {
+  //   console.log('promise1-1')
+  //   resolve();
+  // }).then(function () {
+  //   console.log('promise2-1')
+  // })
+</script>
+
+<script>
+  // 实现 promise example
+  function MyPromise(fn) {
+    let state = 'pending'
+    var resolveCallback = null
+    var rejectCallback = null
+    var childResolve = null
+    var childReject = null
+
+    this.then = function (onResolved, onRejected) {
+      if (state === 'pending') {
+        resolveCallback = onResolved
+        rejectCallback = onRejected
+      }
+
+      return new MyPromise((resolve, reject) => {
+        childResolve = resolve
+        childReject = reject
+      })
+    }
+
+    this.resolve = function (value) {
+      if (state === 'pending') {
+        if (resolveCallback) {
+          var ret = resolveCallback(value)
+          childResolve(ret)
+          state = 'resolved'
+        }
+
+      }
+    }
+
+    this.reject = function (reason) {
+      if (state === 'pending') {
+        if (rejectCallback) {
+          var ret = rejectCallback(reason)
+          childReject(ret)
+          state = 'rejected'
+        }
+      }
+    }
+
+    fn(this.resolve, this.reject)
+  }
+
+  // var demo = new MyPromise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve('my first promise')
+  //   }, 1000)
+  // })
+
+  // demo.then((msg) => {
+  //   console.log(msg)
+  //   return 'my second promise'
+  // }).then((msg) => {
+  //   console.log(msg)
+  //   return 'my third promise'
+  // }).then((msg) => {
+  //   console.log(msg)
+  // })
+</script>
+
+<script>
+  // 手写 promise
+  function PromiseA(fn) {
+    let status = 'pedding'
+    let resolveCallback = null
+    let resolveAsync = true
+    let rejectCallback = null
+    let childResolved = null
+    let childRejected = null
+
+    this.then = function (onResolved, onRejected) {
+      if (status === 'pedding') {
+        resolveCallback = onResolved
+        // rejectCallback = onRejected
+      }
+      // console.log('then--onResolved--', onResolved, 'onRejected--', onRejected, 'status--', status)
+      return new PromiseA((resolve, reject) => {
+        childResolved = resolve
+        childRejected = reject
+      })
+    }
+
+    this.resolve = function (value) {
+      if (status === 'pedding') {
+        if (resolveCallback) {
+          resolveAsync = false
+          let res = resolveCallback(value)
+          childResolved(res)
+          status = 'resolved'
+        }
+
+        // 处理Prmoise中同步数据正常运行
+        setTimeout(() => {
+          if (resolveAsync && resolveCallback) {
+            let res = resolveCallback(value)
+            childResolved(res)
+            status = 'resolved'
+          }
+        }, 0)
+      }
+      // console.log('resolve--', value, 'status--', status)
+    }
+
+    this.reject = function (value) {
+      if (status === 'pedding') {
+        // console.log('reject--', value, 'rejectCallback--', rejectCallback)
+        status = 'rejected'
+        console.error('rejected--', value)
+        // if (rejectCallback) {
+        //   let res = rejectCallback(value)
+        //   childRejected(res)
+
+        // }
+      }
+      // console.log('reject--', value)
+    }
+
+    fn(this.resolve, this.reject)
+  }
+
+  let A = new PromiseA((resolve, reject) => {
+    // setTimeout(() => {
+    //   resolve('第1步')
+    // }, 1000)
+    // resolve('第1步')
+
+    setTimeout(() => {
+      reject(22)
+    }, 1000)
+  })
+
+  A.then((res) => {
+    console.log('A--then--', res)
+    return '第2步'
+  }).then(res => {
+    console.log('A--res--', res)
+  })
+
+  // let B = new Promise((resolve, reject) => {
+  //   resolve('B-1')
+  // })
+
+  // B.then(res => {
+  //   console.log('res--b--', res)
+  //   return 'B-2'
+  // }).then((res) => {
+  //   console.log('res-b--', res)
+  // })
+  // A.then('第2步').then('第3步').then('第4步').then('第5步')
+</script>
+
+
+</html>
