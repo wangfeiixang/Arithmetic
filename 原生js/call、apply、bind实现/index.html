@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  /**
+   * 实现一个caLl方法
+   */
+
+  Function.prototype.myCall = function (context) {
+    // console.log('myCall--', this)
+    //判断是否传入指定的对象
+    context = context || window
+    context.fn = this
+
+    //拿到传入的参数
+    // let args = [...arguments].slice(1)
+    // //把调用的函数添加到对象中
+    // console.log('myCall--arguments--', arguments, 'args--', [...arguments].slice(1))
+    // context.fn()
+    //执行函数
+    // let result = context.fn(...args)
+
+
+    var args = [];
+    for (var i = 1, len = arguments.length; i < len; i++) {
+      args.push('arguments[' + i + ']');
+    }
+
+    var result = eval('context.fn(' + args + ')')
+
+    //执行函数后，从对象中删除掉函数
+    delete context.fn
+    return result
+  }
+
+  function test() {
+    console.log('test--', arguments, 'name--', this.name, 'sex--', this.sex)
+  }
+
+  let obj = {
+    name: 'admin',
+    sex: 'man'
+  }
+
+  test.myCall(obj)
+
+  /**
+ * 实现apply方法
+ * 大体实现方法和apply相同
+ */
+
+Function.prototype.myapply = function(context) {
+  // console.log('myapply--', this)
+  context = context || window
+  context.fn = this
+  let result
+  console.log('arguments--', arguments)
+  if (arguments[1]) {
+    result = context.fn(...arguments[1])
+  } else {
+    result = context.fn()
+  }
+  delete context.fn
+  return result
+}
+
+function fn(name, sex) {
+  this.name = name
+  this.sex  = sex
+  console.log('myapply--name--', this.name, 'sex--', this.sex)
+}
+
+let obj1 = {}
+fn.myapply(obj1,['张三','男'])
+
+/**
+ * 实现一个bind函数
+ */
+ Function.prototype.mybind = function(context) {
+  // console.log('mybind--', this)
+  if (typeof this !== 'function') {
+    return new Error("不是一个函数")
+  }
+   //保存当前函数
+  let _this = this 
+  let args = [...arguments].slice(1)
+  return function F(...newArgs) {
+    //bind返回的是个函数，所以可以实例化一个对象返回
+    if (this instanceof F) {
+      return new _this(...args, ...newArgs)
+    } else {
+      return _this.apply(context, args.concat(newArgs))
+    }
+  }
+}
+
+function parent(sex) {
+  console.log('parent--name--', this.name, 'sex--', sex)
+}
+
+let Son = {
+  name: 'zhangsan'
+}
+let son = parent.mybind(Son,'男')
+son()
+</script>
+
+</html>
