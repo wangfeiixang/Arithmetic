@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>继承</title>
+</head>
+
+<body>
+
+  <script>
+    /*
+     * 约定
+     */
+    function Fun() {
+      // 私有属性
+      var val = 1; // 私有基本属性
+      var arr = [1]; // 私有引用属性
+      function fun() {} // 私有函数（引用属性）
+
+      // 实例属性
+      this.val = 1; // 实例基本属性
+      this.arr = [1]; // 实例引用属性
+      this.fun = function () {}; // 实例函数（引用属性）
+    }
+
+    // 原型属性
+    Fun.prototype.val = 1; // 原型基本属性
+    Fun.prototype.arr = [1, 2]; // 原型引用属性
+    Fun.prototype.fun = function () {}; // 原型函数（引用属性）
+  </script>
+
+  <script>
+    // 原型链继承
+    function Father() {
+      this.name = 'father'
+      this.arr = [1]
+      this.obj = {
+        a: 1
+      }
+    }
+
+    Father.prototype.age = 30
+
+    function Son() {
+      this.name = 'son'
+    }
+
+    Son.prototype = new Father()
+
+    let s1 = new Son()
+    let s2 = new Son()
+
+    s1.arr.push(22)
+    s1.obj.a = 2
+    console.log('s1--', s1, s1.arr, s1.obj.a)
+    console.log('s2--', s2, s2.arr, s2.obj.a)
+  </script>
+
+
+  <script>
+    // 构造函数继承
+    function Super(val) {
+      this.val = val
+      this.arr = [1]
+
+      this.fun = function () {
+        // ...
+      }
+    }
+
+    function Sub(val) {
+      Super.call(this, val) // 核心
+      // ...
+    }
+
+    let sub1 = new Sub(1)
+    let sub2 = new Sub(2)
+    sub1.arr.push(2)
+
+    console.log('sub1--', sub1, 'val--', sub1.val, 'arr--', sub1.arr)
+    console.log('sub2--', sub2, 'val--', sub2.val, 'arr--', sub2.arr)
+
+    console.log(sub1.fun === sub2.fun); // false
+  </script>
+
+
+  <script>
+    // 组合继承
+    function Super() {
+      // 只在此处声明基本属性和引用属性
+      this.val = 1;
+      this.arr = [1];
+    }
+    //  在此处声明函数
+    Super.prototype.fun1 = function () {};
+    Super.prototype.fun2 = function () {};
+    //Super.prototype.fun3...
+    function Sub() {
+      Super.call(this); // 核心
+      // ...
+    }
+    Sub.prototype = new Super(); // 核心
+
+    let Sub1 = new Sub(1);
+    let Sub2 = new Sub(2);
+    console.log(Sub1.fun === Sub2.fun); // true
+  </script>
+
+  <script>
+    // 原型式继承
+    function beget(obj) { // 生孩子函数 beget：龙beget龙，凤beget凤。
+      var F = function () {}
+      F.prototype = obj
+      return new F()
+    }
+
+    function Super1() {
+      this.val = 1
+      this.arr = [1]
+    }
+
+    // 拿到父类对象
+    let sup = new Super1()
+    // 生孩子
+    let sup1 = beget(sup) // 核心
+    // 增强
+    sup1.attr1 = 1
+    sup1.attr2 = 2
+    //sup1.attr3...
+
+    console.log('原型式继承--sup1--', sup1, 'arr--', sup1.arr, 'val--', sup1.val, 'attr1--', sup1.attr1)
+  </script>
+
+  <script>
+    //  寄生式
+    function beget(obj) { // 生孩子函数 beget：龙beget龙，凤beget凤。
+      let F = function () {}
+      F.prototype = obj
+      return new F()
+    }
+
+    function Super() {
+      this.val = 1
+      this.arr = [1]
+    }
+
+    function getSubObject(obj) {
+      // 创建新对象
+      let clone = beget(obj) // 核心
+      // 增强
+      clone.attr1 = 1
+      clone.attr2 = 2
+      //clone.attr3...
+
+      return clone
+    }
+
+    let sub = getSubObject(new Super());
+    console.log('寄生式--sub--', sub, 'val--', sub.val, 'attr1--', sub.attr1, 'arr--', sub.arr) //  1   1  1
+  </script>
+
+  <script>
+    // 寄生组合继承（最佳方式）
+    function beget(obj) { // 生孩子函数 beget：龙beget龙，凤beget凤。
+      let F = function () {}
+      F.prototype = obj
+      return new F()
+    }
+
+    function Super() {
+      // 只在此处声明基本属性和引用属性
+      this.val = 1
+      this.arr = [1]
+    }
+    //  在此处声明函数
+    Super.prototype.fun1 = function () {}
+    Super.prototype.fun2 = function () {}
+    //Super.prototype.fun3...
+    function Sub3() {
+      Super.call(this) // 核心
+      // ...
+    }
+    let proto = beget(Super.prototype) // 核心
+    proto.constructor = Sub3 // 核心
+    Sub3.prototype = proto // 核心
+
+    let sub3 = new Sub3()
+    sub3.arr.push(2)
+    console.log('寄生组合继承--sub3--', sub3, 'arr--', sub3.arr, 'val--', sub3.val, 'Super--', new Super())
+  </script>
+</body>
+
+</html>

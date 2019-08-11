@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>闭包</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  function outer() {
+    var a = '变量1'
+    var inner = function () {
+      // console.info(a)
+    }
+    return inner // inner 就是一个闭包函数，因为他能够访问到outer函数的作用域
+  }
+  outer()()
+
+  // for (var i = 0; i < 5; i++) {
+  //   console.log('1--', i);
+  // }
+
+
+  // for (var i = 0; i < 5; i++) {
+  //   setTimeout(function () {
+  //     console.log('2--', i);
+  //   }, 1000 * i);
+  // }
+
+  // for (var i = 0; i < 5; i++) {
+  //   (function (i) {
+  //     setTimeout(function () {
+  //       console.log('3--', i);
+  //     }, i * 1000);
+  //   })(i);
+  // }
+
+  // for (var i = 0; i < 5; i++) {
+  //   (function () {
+  //     setTimeout(function () {
+  //       console.log('4--', i)
+  //     }, i * 1000)
+  //   })(i)
+  // }
+  // for (var i = 0; i < 5; i++) {
+  //   setTimeout((function (i) {
+  //     console.log('5--', i);
+  //   })(i), i * 1000);
+  // }
+
+  let str1 = '123',
+    str2 = '1234556123'
+
+  // 1. split截取
+  // console.log('xx--', str2.split(str1)[0].length)
+
+  // 2. 正则match exec
+  // console.log('正则match--', str2.match(str1))
+  // console.log('正则exec--', new RegExp(str1, "g").exec(str2))
+
+  // add(1)(2)() = 3   add(1)(2)(3)() = 6
+
+  function Currying(fn) {
+    // console.log('00--', arguments)
+    let args = [].slice.call(arguments, 1)
+
+    function g() {
+      // console.log('11--', arguments, 'args--', args)
+      if (arguments.length > 0) {
+        // console.log('22--', args)
+        args.push.apply(args, arguments)
+        return g
+      } else {
+        // console.log('33--', args)
+        return fn.apply(fn, args)
+      }
+    }
+    return g
+  }
+
+  // 定义一个求和函数
+  function add() {
+    let count = 0
+    if (arguments.length > 0) {
+      for (let i = 0; i < arguments.length; i++) {
+        count += arguments[i]
+      }
+    }
+    // console.log('add--arguments--', arguments, count)
+    return count
+  }
+  // 测试
+  // const _add = Currying(add)
+  // console.log('_add--', _add(1)())
+  Currying(add)(1)()
+
+  // function abc() {
+  //   console.log('abc--', arguments)
+  // }
+
+  // abc()(1)
+
+  function currying1(fn) {
+    console.log('currying1--', arguments)
+    let args = []
+
+    function cb() {
+      console.log('00--cb--', arguments, arguments[0])
+      if (arguments.length) {
+        args.push(arguments[0])
+        console.log('11--args--', args)
+        return cb
+      } else {
+        console.log('22--args--', args)
+        return fn.apply(fn, args)
+      }
+    }
+
+    return cb
+  }
+
+  function count() {
+    console.log('count--', arguments)
+    let res = 0
+    for (let i = 0; i < arguments.length; i++) {
+      res += arguments[i]
+    }
+    console.log('res--', res)
+    return res
+  }
+
+  currying1(count)(1)(2)(3)()
+</script>
+
+</html>
