@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>mergeSort</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  // // 融合两个有序数组，这里实际上是将数组 arr 分为两个数组
+  // function mergeArray(arr, first, mid, last, temp) {
+  //   let i = first
+  //   let m = mid
+  //   let j = mid + 1
+  //   let n = last
+  //   let k = 0
+  //   while (i <= m && j <= n) {
+  //     if (arr[i] < arr[j]) {
+  //       temp[k++] = arr[i++]
+  //     } else {
+  //       temp[k++] = arr[j++]
+  //     }
+  //   }
+  //   while (i <= m) {
+  //     temp[k++] = arr[i++]
+  //   }
+  //   while (j <= n) {
+  //     temp[k++] = arr[j++]
+  //   }
+  //   for (let l = 0; l < k; l++) {
+  //     arr[first + l] = temp[l]
+  //   }
+  //   return arr
+  // }
+  // // 递归实现归并排序
+  // function mergeSort(arr, first, last, temp) {
+  //   if (first < last) {
+  //     let mid = Math.floor((first + last) / 2)
+  //     mergeSort(arr, first, mid, temp) // 左子数组有序
+  //     mergeSort(arr, mid + 1, last, temp) // 右子数组有序
+  //     arr = mergeArray(arr, first, mid, last, temp)
+  //   }
+  //   return arr
+  // }
+
+  // // example
+  // let arr = [10, 3, 1, 5, 11, 2, 0, 6, 3]
+  // let temp = new Array()
+  // let SortedArr = mergeSort(arr, 0, arr.length - 1, temp)
+
+  // console.log('SortedArr--', SortedArr)
+</script>
+
+<script>
+  function mergeSort(arr) {
+    // 设置终止的条件，
+    if (arr.length < 2) {
+      return arr
+    }
+    //设立中间值
+    var middle = parseInt(arr.length / 2)
+    //第1个和middle个之间为左子列
+    var left = arr.slice(0, middle)
+    //第middle+1到最后为右子列
+    var right = arr.slice(middle)
+    if (left == "undefined" && right == "undefined") {
+      return false
+    }
+    console.log('mergeSort--arr--', arr, 'left--', left, 'right--', right)
+    return merge(mergeSort(left), mergeSort(right))
+  }
+
+  function merge(left, right) {
+    console.log('merge--left--', left, 'right--', right)
+    var result = []
+
+    while (left.length && right.length) {
+      if (left[0] <= right[0]) {
+        //把left的左子树推出一个，然后push进result数组里
+        result.push(left.shift())
+      } else {
+        //把right的右子树推出一个，然后push进result数组里
+        result.push(right.shift())
+      }
+    }
+    //经过上面一次循环，只能左子列或右子列一个不为空，或者都为空
+    while (left.length) {
+      result.push(left.shift())
+    }
+    while (right.length) {
+      result.push(right.shift())
+    }
+    return result
+  }
+  // 测试数据
+  var nums = [6, 10, 7, 8, 3, 2]
+  console.log('mergeSort--', mergeSort(nums))
+</script>
+
+</html>

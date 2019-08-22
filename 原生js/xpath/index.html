@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>xpath</title>
+</head>
+
+<body>
+  <ul>
+    <li>
+      <span>1</span>
+    </li>
+    <li>
+      <span>2</span>
+      <span>3</span>
+      <span id="span_3">4</span>
+    </li>
+  </ul>
+
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  function getPath($ele) {
+    function path(el, obj) {
+      // console.log('path--el--', el)
+      if (el[0].nodeName === 'BODY') {
+        obj['BODY'] = ''
+        return obj
+      } else if (el.parent()[0].nodeName === 'BODY') {
+        var children = el.parent().children()
+        for (var i = 0, len = children.length; i < len; i++) {
+          if (el[0] === children[i]) {
+            obj[el[0].nodeName] = i
+          }
+        }
+        obj['BODY'] = ''
+        return obj
+      } else {
+        var children = el.parent().children()
+        for (var i = 0, len = children.length; i < len; i++) {
+          if (el[0] === children[i]) {
+            obj[el[0].nodeName] = i
+          }
+        }
+        path(el.parent(), obj)
+      }
+    }
+    let o = {};
+    path($ele, o)
+    var str = ''
+    for (var k in o) {
+      if (o[k] === '') {
+        str += k + "&"
+      } else {
+        str += k + "[" + o[k] + "]" + "&"
+      }
+    }
+    return str.trim().split("&").reverse().join(">").slice(1).toLowerCase()
+  }
+
+  // 使用
+  console.log(getPath($('#span_3')))
+</script>
+
+</html>
