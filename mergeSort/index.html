@@ -57,49 +57,151 @@
 </script>
 
 <script>
-  function mergeSort(arr) {
-    // 设置终止的条件，
-    if (arr.length < 2) {
-      return arr
-    }
-    //设立中间值
-    var middle = parseInt(arr.length / 2)
-    //第1个和middle个之间为左子列
-    var left = arr.slice(0, middle)
-    //第middle+1到最后为右子列
-    var right = arr.slice(middle)
-    if (left == "undefined" && right == "undefined") {
-      return false
-    }
-    console.log('mergeSort--arr--', arr, 'left--', left, 'right--', right)
-    return merge(mergeSort(left), mergeSort(right))
-  }
+  // function mergeSort(arr) {
+  //   // 设置终止的条件，
+  //   if (arr.length < 2) {
+  //     return arr
+  //   }
+  //   //设立中间值
+  //   var middle = parseInt(arr.length / 2)
+  //   //第1个和middle个之间为左子列
+  //   var left = arr.slice(0, middle)
+  //   //第middle+1到最后为右子列
+  //   var right = arr.slice(middle)
+  //   if (left == "undefined" && right == "undefined") {
+  //     return false
+  //   }
+  //   console.log('mergeSort--arr--', arr, 'left--', left, 'right--', right)
+  //   return merge(mergeSort(left), mergeSort(right))
+  // }
 
-  function merge(left, right) {
-    console.log('merge--left--', left, 'right--', right)
-    var result = []
+  // function merge(left, right) {
 
-    while (left.length && right.length) {
-      if (left[0] <= right[0]) {
-        //把left的左子树推出一个，然后push进result数组里
-        result.push(left.shift())
+  //   let result = []
+  //   console.log('merge--left--', left, 'right--', right)
+  //   while (left.length && right.length) {
+  //     if (left[0] <= right[0]) {
+  //       //把left的左子树推出一个，然后push进result数组里
+  //       result.push(left.shift())
+  //     } else {
+  //       //把right的右子树推出一个，然后push进result数组里
+  //       result.push(right.shift())
+  //     }
+  //   }
+  //   //经过上面一次循环，只能左子列或右子列一个不为空，或者都为空
+  //   while (left.length) {
+  //     result.push(left.shift())
+  //   }
+  //   while (right.length) {
+  //     result.push(right.shift())
+  //   }
+  //   console.log('merge--result--', result)
+  //   return result
+  // }
+  // // 测试数据
+  // var nums = [6, 10, 7, 8, 3, 2]
+  // console.log('mergeSort--', mergeSort(nums))
+</script>
+
+<script>
+  function mergeArray(arr1, arr2) {
+    console.log('mergeArray--arr1--', arr1, 'arr2--', arr2)
+    let ind1 = 0 //标记arr1的对比元素的初始索引值
+    let ind2 = 0 //标记arr2的对比元素的初始索引值
+    let arr = [] //作为输出的新数组
+    while (ind1 < arr1.length && ind2 < arr2.length) {
+      //当arr1和arr2元素均未全部存入arr中，则从第一个元素开始进行比较，将较小的那个元素存入arr
+      if (arr1[ind1] <= arr2[ind2]) {
+        //若arr1的对比元素小于arr2的对比元素，则将arr1的对比元素存入arr中
+        console.log('11--arr1--', arr1[ind1], 'arr2--', arr2[ind2])
+        arr.push(arr1.slice(ind1, ind1 + 1)[0])
+        ind1++
       } else {
-        //把right的右子树推出一个，然后push进result数组里
-        result.push(right.shift())
+        arr.push(arr2.slice(ind2, ind2 + 1)[0])
+        ind2++
       }
     }
-    //经过上面一次循环，只能左子列或右子列一个不为空，或者都为空
-    while (left.length) {
-      result.push(left.shift())
+
+    while (ind1 < arr1.length) {
+      //当arr2的元素已全部存入arr中，则直接将arr1剩余的所有元素依次存入arr
+      arr.push(arr1.slice(ind1, ind1 + 1)[0])
+      ind1++
     }
-    while (right.length) {
-      result.push(right.shift())
+
+    while (ind2 < arr2.length) {
+      //当arr1的元素已全部存入arr中,则直接将arr2剩余的所有元素依次存入arr
+      arr.push(arr2.slice(ind2, ind2 + 1)[0])
+      ind2++
     }
-    return result
+    // console.log('ind1--', ind1, 'ind2--', ind2, 'arr2--', arr2)
+    return arr
   }
-  // 测试数据
-  var nums = [6, 10, 7, 8, 3, 2]
-  console.log('mergeSort--', mergeSort(nums))
+
+  // console.log('mergeArray--', mergeArray([1, 4, 6], [2, 3, 7]))
+</script>
+
+<script>
+// function mergeSort(arr){
+//   if (arr.length === 1) {
+//     return arr
+//   }
+
+//   let mid = Math.floor(arr.length / 2)
+//   let left = arr.slice(0, mid)
+//   let right = arr.slice(mid)
+
+//   return mergeFun(mergeSort(left), mergeSort(right))
+// }
+
+// function mergeFun(left, right){
+//   let result = []
+//   while(left.length && right.length){
+//     if (left[0] <= right[0]) {
+//       result.push(left.shift())
+//     } else {
+//       result.push(right.shift())
+//     }
+//   }
+
+//   while(left.length){
+//     result.push(left.shift())
+//   }
+
+//   while(right.length){
+//     result.push(right.shift())
+//   }
+
+//   // console.log('11--mergeFun--left--', left, 'right--', right, 'result--', result)
+//   return result
+// }
+
+// mergeSort([10,7,11,2])
+</script>
+
+<script>
+// 当已知两个有序数组，合并到一个新数组
+function mergeArr(arrLeft, arrRight){
+  let leftIndex = 0, rightIndex = 0, result = []
+  while(leftIndex< arrLeft.length && rightIndex< arrRight.length){
+    if (arrLeft[leftIndex] <= arrRight[rightIndex]) {
+      result.push(arrLeft[leftIndex++])
+    } else {
+      result.push(arrRight[rightIndex++])
+    }
+  }
+
+  while(leftIndex < arrLeft.length){
+    result.push(arrLeft[leftIndex++])
+  }
+
+  while(rightIndex < arrRight.length){
+    result.push(arrRight[rightIndex++])
+  }
+  console.log('mergeArr--arrLeft--', arrLeft, 'arrRight--', arrRight, 'result--', result)
+  return result
+}
+
+mergeArr([3,7,10], [1,5,12])
 </script>
 
 </html>
