@@ -170,23 +170,23 @@
     fn(this.resolve, this.reject)
   }
 
-  let A = new PromiseA((resolve, reject) => {
-    // setTimeout(() => {
-    //   resolve('第1步')
-    // }, 1000)
-    // resolve('第1步')
+  // let A = new PromiseA((resolve, reject) => {
+  //   // setTimeout(() => {
+  //   //   resolve('第1步')
+  //   // }, 1000)
+  //   // resolve('第1步')
 
-    setTimeout(() => {
-      reject(22)
-    }, 1000)
-  })
+  //   setTimeout(() => {
+  //     reject(22)
+  //   }, 1000)
+  // })
 
-  A.then((res) => {
-    console.log('A--then--', res)
-    return '第2步'
-  }).then(res => {
-    console.log('A--res--', res)
-  })
+  // A.then((res) => {
+  //   console.log('A--then--', res)
+  //   return '第2步'
+  // }).then(res => {
+  //   console.log('A--res--', res)
+  // })
 
   // let B = new Promise((resolve, reject) => {
   //   resolve('B-1')
@@ -199,7 +199,81 @@
   //   console.log('res-b--', res)
   // })
   // A.then('第2步').then('第3步').then('第4步').then('第5步')
+
+  // function promiseAll(promises) {
+  //   console.log('promiseAll--', promises)
+  //   return new Promise(function(resolve, reject) {
+  //     if (!isArray(promises)) {
+  //       return reject(new TypeError('arguments must be an array'));
+  //     }
+  //     var resolvedCounter = 0;
+  //     var promiseNum = promises.length;
+  //     var resolvedValues = new Array(promiseNum);
+  //     for (var i = 0; i < promiseNum; i++) {
+  //       (function(i) {
+  //         Promise.resolve(promises[i]).then(function(value) {
+  //           resolvedCounter++
+  //           resolvedValues[i] = value
+  //           if (resolvedCounter == promiseNum) {
+  //             return resolve(resolvedValues)
+  //           }
+  //         }, function(reason) {
+  //           return reject(reason)
+  //         })
+  //       })(i)
+  //     }
+  //   })
+  // }
+
+  // promiseAll([1, 2, 3])
 </script>
 
+<script>
+/**
+ * 实现一个 promise.all()
+ */
+
+// console.log('xx--PromiseA--', PromiseA)
+Promise.all1 = function (promises) {
+  console.log('00--promises--', promises)
+  let results = new Array()
+  return new Promise(async function (resolve, reject) {
+    promises.forEach(promise => {
+      promise.then(res => {
+        results.push(res)
+        if (results.length === promises.length) {
+          resolve(results)
+        }
+      })
+    })
+  })
+}
+
+const a = new Promise(function (resolve, reject) {
+  resolve('a resolve')
+})
+const b = new Promise(function (resolve, reject) {
+  resolve('b resolve')
+})
+const c = new Promise(function (resolve, reject) {
+  reject('c reject')
+})
+
+// Promise.all([a, b])
+// .then(res => {
+//   console.log(res);
+// })
+// .catch(err => {
+//   console.warn(err);
+// });
+
+Promise.all1([a, b, c])
+.then(res => {
+  console.log(res, '000')
+})
+.catch(err => {
+  console.log(err, 'iiii')
+})
+</script>
 
 </html>

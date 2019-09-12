@@ -1,0 +1,10 @@
+const log4js = require("./log4.js")
+logger = log4js.getLogger("info")
+
+logger.info("现在时间：", new Date().toLocaleString())
+logger.trace("现在时间：", new Date().toLocaleString())
+logger.debug("现在时间：", new Date().toLocaleString())
+logger.info("现在时间：", new Date().toLocaleString())
+logger.warn("现在时间：", new Date().toLocaleString())
+logger.error("现在时间：", new Date().toLocaleString())
+logger.fatal("现在时间：", new Date().toLocaleString())

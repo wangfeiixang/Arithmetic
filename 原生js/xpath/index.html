@@ -15,8 +15,15 @@
     </li>
     <li>
       <span>2</span>
-      <span>3</span>
-      <span id="span_3">4</span>
+      <span id="span_3">3</span>
+      <span>4</span>
+    </li>
+    <li>
+      <h3>
+        <p>
+          <span>哈哈哈</span>
+        </p>
+      </h3>
     </li>
   </ul>
 
@@ -25,38 +32,42 @@
 <script>
   function getPath($ele) {
     function path(el, obj) {
-      // console.log('path--el--', el)
+      console.log('path--el--', el, el.parent())
       if (el[0].nodeName === 'BODY') {
         obj['BODY'] = ''
         return obj
       } else if (el.parent()[0].nodeName === 'BODY') {
-        var children = el.parent().children()
-        for (var i = 0, len = children.length; i < len; i++) {
+        let children = el.parent().children()
+        for (let i = 0, len = children.length; i < len; i++) {
           if (el[0] === children[i]) {
             obj[el[0].nodeName] = i
           }
         }
         obj['BODY'] = ''
+        console.log('obj--', obj)
         return obj
       } else {
-        var children = el.parent().children()
-        for (var i = 0, len = children.length; i < len; i++) {
+        let children = el.parent().children()
+        for (let i = 0, len = children.length; i < len; i++) {
           if (el[0] === children[i]) {
             obj[el[0].nodeName] = i
           }
         }
+        console.log('11--children--', children, 'el--', el, 'obj--', obj)
         path(el.parent(), obj)
       }
     }
-    let o = {};
+    let o = {}
     path($ele, o)
-    var str = ''
-    for (var k in o) {
+    let str = ''
+    for (let k in o) {
       if (o[k] === '') {
         str += k + "&"
       } else {
         str += k + "[" + o[k] + "]" + "&"
       }
+
+      console.log('str--', str)
     }
     return str.trim().split("&").reverse().join(">").slice(1).toLowerCase()
   }
