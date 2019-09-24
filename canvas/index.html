@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>canvas</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    canvas {
+      border: 1px solid black;
+    }
+
+    button {
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="canvas" width="400px" height="400px">
+    您的浏览器不支持canvas,请使用chrome
+  </canvas>
+  <p>
+    <button onclick="clearCanvas()">清空</button>
+  </p>
+</body>
+<script>
+  // let canvas = document.getElementById('canvas')
+  // canvas.width = 400
+  // canvas.height = 400
+  // let ctx = canvas.getContext("2d"),
+  //   x = 100,
+  //   y = 100,
+  //   w = 200,
+  //   h = 200
+  // ctx.strokeStyle = "skyblue"
+  // ctx.strokeRect(x, y, w, h)
+
+  // ctx.beginPath()
+  // ctx.strokeStyle = "purple"
+  // ctx.arc(200, 200, 10, 0, 2 * Math.PI);
+  // ctx.stroke()
+
+
+  // // 监听画布
+  // canvas.addEventListener("mousemove", function (e) {
+  //   // 鼠标x轴 >= 矩阵x轴 && 鼠标x轴 <= 矩阵x轴 + 矩阵宽度
+  //   // 鼠标y轴 >= 矩阵y轴 && 鼠标y轴 <= 矩阵y轴 + 矩阵高度
+  //   console.log('canvas--e--', e, ctx)
+  //   ctx.beginPath()
+  //   ctx.clearRect(x, y, w, h)
+  //   // ctx.beginPath()
+  //   if (e.layerX >= 100 && e.layerX <= x + w && e.layerY >= y && e.layerY <= y + h) {
+  //     console.log('矩形范围--layerX--', e.layerX, 'layerY--', e.layerY)
+  //     ctx.strokeStyle = "red"
+  //     ctx.strokeRect(x, y, w, h)
+  //   } else {
+  //     ctx.clearRect(x, y, w, h)
+  //     ctx.strokeStyle = "skyblue"
+  //     ctx.strokeRect(x, y, w, h)
+  //     console.log('不是矩形范围--layerX--', e.layerX, 'layerY--', e.layerY)
+  //   }
+  // })
+
+  // canvas.addEventListener("mouseout", function (e) {
+  //   ctx.clearRect(x, y, w, h)
+  //   // ctx.beginPath()
+  //   // ctx.strokeStyle = "skyblue"
+  //   // ctx.strokeRect(x, y, w, h)
+  // })
+</script>
+
+<script>
+  let canvas = document.getElementById('canvas'),
+    x = 100,
+    y = 100,
+    width = 200,
+    height = 200
+  let ctx = canvas.getContext('2d')
+  drawRect({x: x, y: y, width: width, height: height}, "skyblue")
+  drawCircle({x: 200, y: 200, radius: 15}, 'purple')
+
+  canvas.addEventListener("mousemove", function (e) {
+    // console.log('mousemove--e--', e)
+
+    clearCanvas()
+    if (e.layerX >= x && e.layerX <= x + width && e.layerY >= y && e.layerY <= y + height) {
+      drawRect({x: x, y: y, width: width, height: height}, "red")
+      drawCircle({x: 200, y: 200, radius: 15}, 'green')
+      let clickX = e.pageX - canvas.offsetLeft
+      let clickY = e.pageY - canvas.offsetTop
+      drawToolTip('哈哈哈哈哈', clickX+10, clickY-5)
+      let distanceFromCenter = Math.sqrt(Math.pow(200 - clickX, 2) +
+        Math.pow(200 - clickY, 2))
+      if (distanceFromCenter <= 15) {
+        canvas.style.cursor = 'pointer'
+      } else {
+        canvas.style.cursor = 'auto'
+      }
+    } else {
+
+      drawRect({x: x, y: y, width: width, height: height}, "skyblue")
+      drawCircle({x: 200, y: 200, radius: 15}, 'purple')
+    }
+  })
+
+  canvas.addEventListener("mouseout", function (e) {
+    canvas.style.cursor = 'auto'
+  })
+
+  canvas.addEventListener("click", function (e) {
+    console.log('click--e--', e)
+    // 取得画布上被单击的点
+    let clickX = e.pageX - canvas.offsetLeft;
+    let clickY = e.pageY - canvas.offsetTop
+    let distanceFromCenter = Math.sqrt(Math.pow(200 - clickX, 2) +
+      Math.pow(200 - clickY, 2))
+
+    if (distanceFromCenter <= 15) {
+      alert('circle')
+    }
+    // clearCanvas()
+  })
+
+  // 清空画布
+  function clearCanvas() {
+    ctx.clearRect(0, 0, 400, 400)
+    // context.fill()
+  }
+
+  // 绘制矩形
+  function drawRect(position, color){
+    ctx.beginPath()
+    ctx.strokeStyle = color
+    ctx.strokeRect(position.x, position.y, position.width, position.height)
+  }
+
+  // 绘制圆形
+  function drawCircle(position, color){
+    ctx.beginPath()
+    ctx.strokeStyle = color
+    ctx.arc(position.x, position.y, position.radius, 0, 2 * Math.PI)
+    ctx.stroke()
+  }
+
+  // 绘制悬浮框
+  function drawToolTip(title, x, y){
+    console.log('drawToolTip--')
+    ctx.save();
+    let padding = 5
+    let font = "16px arial"
+    ctx.font = font
+    ctx.textBaseline = 'bottom'
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'
+
+    //绘制ToolTip背景
+    let width = ctx.measureText(title).width
+    let height = parseInt(font, 10)
+    ctx.fillRect(x, y-height-2, width+padding*2, height+padding*2)
+
+    //绘制ToolTip文字
+    ctx.fillStyle = '#fff'
+    ctx.fillText(title, x+padding, y+padding)
+
+    ctx.restore()
+  }
+</script>
+
+</html>
