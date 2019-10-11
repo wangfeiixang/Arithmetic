@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>test</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    #test {
+      font-size: 20px;
+      color: red;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test"></div>
+  <input type="file" accept="image/*" capture="camera">
+  <p></p>
+  <input type="file" capture="camera">
+</body>
+<script>
+  // localStorage.setItem('test', 'test')
+  window.onload = function () {
+    // console.log(localStorage.getItem('test'))
+    // localStorage.removeItem('test')
+    // document.getElementById('test').innerHTML = localStorage.getItem('test') ? localStorage.getItem('test') : 'not exist'
+  }
+</script>
+
+</html>

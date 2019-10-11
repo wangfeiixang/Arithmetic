@@ -16,7 +16,7 @@
     <li>
       <span>2</span>
       <span id="span_3">3</span>
-      <span>4</span>
+      <span id="span_4">4</span>
     </li>
     <li>
       <h3>
@@ -30,21 +30,25 @@
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <script>
+
+  // console.log('xx--', $('body'))
+
   function getPath($ele) {
     function path(el, obj) {
-      console.log('path--el--', el, el.parent())
+      // console.log('path--el--', el, el.parent())
       if (el[0].nodeName === 'BODY') {
         obj['BODY'] = ''
         return obj
       } else if (el.parent()[0].nodeName === 'BODY') {
         let children = el.parent().children()
+        // console.log('children--', children, el[0])
         for (let i = 0, len = children.length; i < len; i++) {
           if (el[0] === children[i]) {
             obj[el[0].nodeName] = i
           }
         }
         obj['BODY'] = ''
-        console.log('obj--', obj)
+        // console.log('obj--', obj)
         return obj
       } else {
         let children = el.parent().children()
@@ -53,27 +57,82 @@
             obj[el[0].nodeName] = i
           }
         }
-        console.log('11--children--', children, 'el--', el, 'obj--', obj)
+        // console.log('11--children--', children, 'el--', el, 'obj--', obj)
         path(el.parent(), obj)
       }
     }
     let o = {}
     path($ele, o)
+
     let str = ''
     for (let k in o) {
+      // console.log('o--', o, 'k--', k, o[k])
       if (o[k] === '') {
         str += k + "&"
       } else {
         str += k + "[" + o[k] + "]" + "&"
       }
 
-      console.log('str--', str)
+      // console.log('str--', str.trim().split("&").reverse().join(">"))
     }
+
     return str.trim().split("&").reverse().join(">").slice(1).toLowerCase()
+
   }
 
   // 使用
   console.log(getPath($('#span_3')))
+</script>
+
+<script>
+  function getPathFun($ele){
+    // console.log('getPathFun--$ele--', $ele, $ele.parent())
+    let obj = recurveEle($ele, {})
+    let str = ''
+    for (const k in obj) {
+    //  console.log('k--', k, 'obj--', obj[k])
+     if (obj[k] !== '') {
+      str +=  `${k}[${obj[k]}]&`
+     } else {
+      str += `${k}&`
+     }
+    }
+    // console.log('str--', str.split('&').reverse().join('>').slice(1).toLocaleLowerCase())
+    return  str.split('&').reverse().join('>').slice(1).toLocaleLowerCase()
+  }
+
+  function recurveEle (ele, o){
+    if (ele[0].nodeName === 'BODY') {
+      o.BODY = ''
+      return 
+    } else if(ele.parent()[0].nodeName === 'BODY'){
+      
+      let children = ele.parent().children()
+      for (let i = 0; i < children.length; i++) {
+        if (ele[0] === children[i]) {
+          o[children[i].nodeName] = i
+          break
+        }
+        // console.log('children--', children, 'i--', children[i])
+      }
+      o.BODY = ''
+    } else {
+      let  children = ele.parent().children()
+      for (let i = 0; i < children.length; i++) {
+        if (ele[0] === children[i]) {
+          // console.log('xx--', children[i].nodeName, i)
+          o[children[i].nodeName] = i
+          break
+        }
+      }
+      // console.log('children--00--', children, ele)
+      recurveEle(ele.parent(), o)
+    }
+
+    return o
+  }
+
+  console.log('getPathFun--', getPathFun($('#span_4'))) 
 </script>
 
 </html>
