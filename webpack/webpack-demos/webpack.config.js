@@ -21,23 +21,23 @@ module.exports = (env, arg) => {
     },
     module: {
       rules: [{
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           exclude: /(node_modules|bower_components)/,
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env']
+              presets: ['@babel/preset-env', '@babel/preset-react']
             }
           }
         },
         {
-          test: /\.css$/,
+          test: /\.(le|c)ss$/,
           use: [
             "css-hot-loader",
             arg.mode === 'production' ? MiniCssExtractPlugin.loader : "style-loader",
             "css-loader",
-            "postcss-loader"
-
+            "postcss-loader",
+            "less-loader"
           ]
         }
       ]
