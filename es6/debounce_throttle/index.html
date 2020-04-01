@@ -20,7 +20,8 @@
 <script>
   // 防抖
   function debounce(fn, wait) {
-    var timeout = null;
+    let timeout = null;
+    // console.log('timeout--', timeout)
     return function () {
       if (timeout !== null) clearTimeout(timeout);
       timeout = setTimeout(fn, wait);
@@ -28,7 +29,7 @@
   }
   // 处理函数
   function handle() {
-    console.log(Math.random());
+    console.log('防抖--', Math.random());
   }
   // 滚动事件
   window.addEventListener('scroll', debounce(handle, 1000));

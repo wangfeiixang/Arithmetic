@@ -30,7 +30,6 @@
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <script>
-
   // console.log('xx--', $('body'))
 
   function getPath($ele) {
@@ -85,28 +84,28 @@
 </script>
 
 <script>
-  function getPathFun($ele){
+  function getPathFun($ele) {
     // console.log('getPathFun--$ele--', $ele, $ele.parent())
     let obj = recurveEle($ele, {})
     let str = ''
     for (const k in obj) {
-    //  console.log('k--', k, 'obj--', obj[k])
-     if (obj[k] !== '') {
-      str +=  `${k}[${obj[k]}]&`
-     } else {
-      str += `${k}&`
-     }
+      //  console.log('k--', k, 'obj--', obj[k])
+      if (obj[k] !== '') {
+        str += `${k}[${obj[k]}]&`
+      } else {
+        str += `${k}&`
+      }
     }
     // console.log('str--', str.split('&').reverse().join('>').slice(1).toLocaleLowerCase())
-    return  str.split('&').reverse().join('>').slice(1).toLocaleLowerCase()
+    return str.split('&').reverse().join('>').slice(1).toLocaleLowerCase()
   }
 
-  function recurveEle (ele, o){
+  function recurveEle(ele, o) {
     if (ele[0].nodeName === 'BODY') {
       o.BODY = ''
-      return 
-    } else if(ele.parent()[0].nodeName === 'BODY'){
-      
+      return
+    } else if (ele.parent()[0].nodeName === 'BODY') {
+
       let children = ele.parent().children()
       for (let i = 0; i < children.length; i++) {
         if (ele[0] === children[i]) {
@@ -117,7 +116,7 @@
       }
       o.BODY = ''
     } else {
-      let  children = ele.parent().children()
+      let children = ele.parent().children()
       for (let i = 0; i < children.length; i++) {
         if (ele[0] === children[i]) {
           // console.log('xx--', children[i].nodeName, i)
@@ -132,7 +131,7 @@
     return o
   }
 
-  console.log('getPathFun--', getPathFun($('#span_4'))) 
+  console.log('getPathFun--', getPathFun($('#span_4')))
 </script>
 
 </html>

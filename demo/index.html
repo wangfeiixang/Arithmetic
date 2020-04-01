@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>demo</title>
+</head>
+<style>
+  div{  
+    width:30%;  
+    background:red;  
+    /* max-width:200px;   */
+  }  
+  div:after{  
+    content: '';  
+    display: block;  
+    padding-top:100%;  
+  } 
+</style>
+<body>
+  <div></div>
+</body>
+<script>
+  // console.log('demo--Array--', Array.isArray([1, 2, 3]), Array.isArray({}))
+  // console.log('demo--instanceof--', [] instanceof Array, '{}--', {}
+  //   instanceof Object, 'isPrototypeOf--', Array.prototype.isPrototypeOf(22))
+
+  // beforeCreate
+  // created
+  // beforeMount
+  // mounted
+  // beforeUpate
+  // updated
+  // beforDestroy
+  // destroy
+
+  // onhashchange
+  // onpopstate
+
+  // var a = 2
+  // var b = 2
+  // a = 4
+
+  // var a = 2
+  // var b = a
+  // b = 4
+  // a = 1
+  // console.log('a--', a, 'b--', b)
+
+  // var a = {name: 'a'}
+  // var b = a
+  // // b.name = 'b'
+  // a.name = 'a1'
+  // console.log('a--', a, 'b--', b)
+
+  // var a = { a: 1}
+  // var b = a
+  // a.x = b = {a:2}
+  // console.log('a--', a, 'b--', b)
+
+  // for (var i = 0; i < 5; i++) {
+  //   setTimeout(function(k){
+  //     console.log('i--', i, 'k--', k)
+  //   }(i),0)
+  // }
+
+  // function Fun() {
+  // }
+  // console.log('Fun--', Fun)
+</script>
+
+<script>
+  async function async1() {
+    console.log("async1 start");
+    await async2();
+    console.log("async1 end");
+
+  }
+  async function async2() {
+    console.log('async2');
+  }
+  console.log("script start");
+  setTimeout(function () {
+    console.log("setTimeout");
+  }, 0);
+  async1();
+  // console.log('xxx')
+  new Promise(function (resolve) {
+    console.log("promise1");
+    resolve();
+  }).then(function () {
+    console.log("promise2");
+  });
+  console.log('script end');
+</script>
+
+</html>

@@ -13,7 +13,7 @@
 </body>
 <script>
   /**
-   * 实现一个caLl方法
+   * 实现一个call方法
    */
 
   Function.prototype.myCall = function (context) {
@@ -44,7 +44,7 @@
   }
 
   function test() {
-    console.log('test--', arguments, 'name--', this.name, 'sex--', this.sex)
+    console.log('test--', [...arguments], 'name--', this.name, 'sex--', this.sex)
   }
 
   let obj = {
@@ -55,64 +55,130 @@
   test.myCall(obj)
 
   /**
- * 实现apply方法
- * 大体实现方法和apply相同
- */
+   * 实现apply方法
+   * 大体实现方法和apply相同
+   */
 
-Function.prototype.myapply = function(context) {
-  // console.log('myapply--', this)
-  context = context || window
-  context.fn = this
-  let result
-  console.log('arguments--', arguments)
-  if (arguments[1]) {
-    result = context.fn(...arguments[1])
-  } else {
-    result = context.fn()
-  }
-  delete context.fn
-  return result
-}
-
-function fn(name, sex) {
-  this.name = name
-  this.sex  = sex
-  console.log('myapply--name--', this.name, 'sex--', this.sex)
-}
-
-let obj1 = {}
-fn.myapply(obj1,['张三','男'])
-
-/**
- * 实现一个bind函数
- */
- Function.prototype.mybind = function(context) {
-  // console.log('mybind--', this)
-  if (typeof this !== 'function') {
-    return new Error("不是一个函数")
-  }
-   //保存当前函数
-  let _this = this 
-  let args = [...arguments].slice(1)
-  return function F(...newArgs) {
-    //bind返回的是个函数，所以可以实例化一个对象返回
-    if (this instanceof F) {
-      return new _this(...args, ...newArgs)
+  Function.prototype.myapply = function (context) {
+    // console.log('myapply--', this)
+    context = context || window
+    context.fn = this
+    let result
+    console.log('myapply--arguments--', ...arguments)
+    if (arguments[1]) {
+      result = context.fn(...arguments[1])
     } else {
-      return _this.apply(context, args.concat(newArgs))
+      result = context.fn()
+    }
+    delete context.fn
+    return result
+  }
+
+  function fn(name, sex) {
+    this.name = name
+    this.sex = sex
+    console.log('fn--myapply--arguments--', [...arguments], 'name--', this.name, 'sex--', this.sex)
+  }
+
+  let obj1 = {}
+  fn.myapply(obj1, ['张三', '男'])
+
+  /**
+   * 实现一个bind函数
+   */
+  Function.prototype.mybind = function (context) {
+    // console.log('mybind--', this)
+    if (typeof this !== 'function') {
+      return new Error("不是一个函数")
+    }
+    //保存当前函数
+    let _this = this
+    let args = [...arguments].slice(1)
+    return function F(...newArgs) {
+      //bind返回的是个函数，所以可以实例化一个对象返回
+      if (this instanceof F) {
+        return new _this(...args, ...newArgs)
+      } else {
+        return _this.apply(context, args.concat(newArgs))
+      }
     }
   }
-}
 
-function parent(sex) {
-  console.log('parent--name--', this.name, 'sex--', sex)
-}
+  function parent(sex) {
+    console.log('parent--name--', this.name, 'sex--', sex)
+  }
 
-let Son = {
-  name: 'zhangsan'
-}
-let son = parent.mybind(Son,'男')
-son()
+  let Son = {
+    name: 'zhangsan'
+  }
+  let son = parent.mybind(Son, '男')
+  son()
+</script>
+
+<script>
+  console.log('-------------------------------------test-------------------------------------')
+  Function.prototype.call1 = function (context) {
+    context = context || window
+    context.fn = this
+    console.log('xx--call1--', [...arguments].slice(1))
+    let args = [...arguments].slice(0)
+    let result = context.fn(args)
+    delete context.fn
+    return result
+  }
+
+  let testObj = {
+    name: 'a1',
+    age: 18
+  }
+
+  function testFn() {
+    console.log('testFn--', this)
+  }
+
+  testFn.call1(testObj)
+
+  Function.prototype.apply1 = function (context) {
+    context = context || window
+    context.fn = this
+    // console.log('xx--apply1--', ...arguments[1])
+    let result = context.fn(...arguments[1])
+    delete context.fn
+    return result
+  }
+
+  let applyObj = {
+    a3: 88
+  }
+
+  function testApplyFn(name, age, desc) {
+    this.name = name
+    this.age = age
+    this.desc = desc
+    console.log('testApplyFn--this--', this, 'name--', name, 'age--', age, 'desc--', desc, this.a3)
+  }
+
+  testApplyFn.apply1(applyObj, ['a2', 20, 'ok'])
+
+  Function.prototype.myBind1 = function (context) {
+    context = context || window
+    let args = [...arguments].slice(1)
+    let _this = this
+    console.log('myBind1--', [...arguments], 'args--', args.concat([...arguments][0]))
+    return function () {
+      return _this.apply(context, args.concat([...arguments][0]))
+    }
+  }
+
+  let bindObj = {
+    name: 'bind'
+  }
+
+  function testBind(age, age1) {
+    console.log('testBind--this--', this, 'age--', age, 'age1--', age1, 'arguments--', arguments)
+  }
+
+  testBind.myBind1(bindObj, 30, 60)()
 </script>
 
 </html>

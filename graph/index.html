@@ -169,9 +169,9 @@
       }
     }
   }
-  
-  
-  function dfs1(v){
+
+
+  function dfs1(v) {
     // console.log('dfs1--v--', v)
     this.marked[v] = true
     if (this.adj[v] != undefined) {
@@ -180,7 +180,7 @@
 
     let w = this.adj[v].shift()
 
-    while(w != undefined){
+    while (w != undefined) {
 
       if (!this.marked[w]) {
         this.dfs1(w)
@@ -190,12 +190,12 @@
     }
   }
 
-  function bfs1(s){
+  function bfs1(s) {
     this.marked[s] = true
     let queue = []
     queue.push(s)
     let w
-    while(queue.length){
+    while (queue.length) {
 
       let v = queue.shift()
 
@@ -220,10 +220,10 @@
       }
 
     }
-    
+
     // console.log('bfs1--w--', w, 'queue--', queue)
   }
-  
+
   // 测试
   var graph = new Graph(7)
   graph.addEdge(0, 1)
@@ -237,8 +237,8 @@
   graph.showGraph()
   document.write("<br/>")
   document.write("======深度度优先搜索=====")
-  // graph.dfs(0)
-  graph.dfs1(0)
+  graph.dfs(0)
+  // graph.dfs1(0)
   document.write("<br/>")
   document.write("======广度优先搜索=====")
   var graph1 = new Graph(7)
@@ -248,8 +248,8 @@
   graph1.addEdge(1, 5)
   graph1.addEdge(2, 4)
   graph1.addEdge(2, 6)
-  // graph1.bfs(0)
-  graph1.bfs1(0)
+  graph1.bfs(0)
+  // graph1.bfs1(0)
 </script>
 
 <script>

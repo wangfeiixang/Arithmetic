@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .box {
+      width: 500px;
+      display: flex;
+      height: 100px;
+      justify-content: space-between;
+    }
+
+    .box>div {
+      /* flex: 1; */
+      width: 100px;
+      background: red;
+    }
+  </style>
+</head>
+<div class="box">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<body>
+  <script>
+    // [1-9]\d{7,10}@qq\.com
+    // /^\w{5,}@[a-z0-9]{2,3}\.[a-z]+$|\,$/  
+    // let str = /^\d+@[a-z0-9]{2,}\.\w+$/
+    // console.log('test--', str.test('871804591@123.com'))
+    // let arr = [1, 2, 3]
+    // console.log('xx--', arr.pop(), arr)
+  </script>
+
+  <script>
+    function Foo() {
+      getName = function () {
+        console.log('this--', this, 1);
+      }
+      console.log('xx--', this)
+      return this
+    }
+
+    Foo.getName = function () {
+      console.log(2);
+    }
+
+    Foo.prototype.getName = function () {
+      console.log(3);
+    }
+
+    var getName = function () {
+      console.log(4);
+    }
+
+    function getName() {
+      console.log(5);
+    }
+
+    //请写出以下输出结果：
+    Foo.getName(); // 2
+    getName(); // 4
+    Foo().getName(); // 1
+    getName(); // 1
+    new Foo.getName(); // 2
+    new Foo().getName(); // 3
+    new new Foo().getName(); // 3
+  </script>
+
+</body>
+
+</html>
